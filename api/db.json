@@ -1,0 +1,10 @@
+{
+  "Languages": [
+    { "id": "1", "name": "Elm", "difficulty": 4 },
+    { "id": "2", "name": "JavaScript", "difficulty": 3 },
+    { "id": "3", "name": "Ruby", "difficulty": 2 },
+    { "id": "4", "name": "Scala", "difficulty": 4 },
+    { "id": "5", "name": "Python", "difficulty": 2 },
+    { "id": "6", "name": "Haskell", "difficulty": 5 }
+  ]
+}
