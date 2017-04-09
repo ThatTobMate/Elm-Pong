@@ -108,7 +108,7 @@ var _user$project$Game$Paddle = F7(
 		return {x: a, y: b, vx: c, vy: d, direction: e, score: f, speed: g};
 	});
 var _user$project$Game$player = function (y) {
-	return A7(_user$project$Game$Paddle, 0, y, 0, 0, 0, 0, 600);
+	return A7(_user$project$Game$Paddle, 0, y, 0, 0, 0, 0, 200);
 };
 var _user$project$Game$Model = F5(
 	function (a, b, c, d, e) {
@@ -350,17 +350,3 @@ var _user$project$Game$subscriptions = function (model) {
 			}
 		});
 };
-var _user$project$Game$main = _elm_lang$html$Html$program(
-	{
-		init: _user$project$Game$init,
-		update: F2(
-			function (msg, model) {
-				return {
-					ctor: '_Tuple2',
-					_0: A2(_user$project$Game$update, msg, model),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			}),
-		view: _user$project$Game$view,
-		subscriptions: _user$project$Game$subscriptions
-	})();

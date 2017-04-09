@@ -246,12 +246,8 @@ view model =
           |> move (0, 10 - gameHeight/2)
       ]
 
-
 courtOrange =
   rgb 214 124 66
-
-textGreen =
-  rgb 160 200 160
 
 formatTxt f string =
   Text.fromString string
@@ -266,13 +262,3 @@ make obj (shape, color) =
   shape
     |> filled color
     |> move (obj.x, obj.y)
-
--- MAIN
-
-main = 
-  Html.program
-    { init = init
-    , update = \msg model -> (update msg model, Cmd.none)
-    , view = view 
-    , subscriptions = subscriptions
-    }
