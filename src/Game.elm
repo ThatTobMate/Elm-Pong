@@ -6,7 +6,7 @@ import Element exposing (..)
 import Html exposing (..)
 import Time exposing (..)
 import Window exposing (Size)
-import Random
+import Random exposing (int, step, initialSeed)
 import Text
 import AnimationFrame
 import Task
@@ -152,14 +152,24 @@ moveBall delta ball player computer =
       , vx = handleVelocity ball.vx (ball.x < 7 - halfWidth) (ball.x > halfWidth - 7)
       }
 
+fst (a, _) = a
+
+
+getInt t = round t
+
+initSeed x = initialSeed x
+getRand x = step (int 18 20) (initSeed x)
+
 moveComputer : Time -> Int -> Paddle -> Ball -> Paddle
 moveComputer delta point computer ball =
   let
     movedComputer =
       handleCollisions delta { computer | vx = toFloat -1 * computer.speed}
+    rand =
+      fst (getRand (getInt (Time.inMilliseconds delta)))
   in
     { movedComputer |
-      x = clamp (22 - halfWidth) (halfWidth - 22) ball.x
+      x = clamp (22 - halfWidth) (halfWidth - 22) ball.x + toFloat rand
     , score = computer.score + point  
     }
 
@@ -234,6 +244,8 @@ view model =
     collage gameWidth gameHeight
       [ rect gameWidth gameHeight
           |> filled courtOrange
+      --, (rect gameWidth 5, black)
+      --    |> make { x = 0, y = 0 }
       , (oval 15 15, yellow)
           |> make ball
       , (rect 40 10, white)
