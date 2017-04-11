@@ -17,7 +17,6 @@ var _user$project$Game$formatTxt = F2(
 						_elm_lang$core$Color$white,
 						_evancz$elm_graphics$Text$fromString(string)))));
 	});
-var _user$project$Game$textGreen = A3(_elm_lang$core$Color$rgb, 160, 200, 160);
 var _user$project$Game$courtOrange = A3(_elm_lang$core$Color$rgb, 214, 124, 66);
 var _user$project$Game$handleVelocity = F3(
 	function (v, leftBumper, rightBumper) {
@@ -108,7 +107,7 @@ var _user$project$Game$Paddle = F7(
 		return {x: a, y: b, vx: c, vy: d, direction: e, score: f, speed: g};
 	});
 var _user$project$Game$player = function (y) {
-	return A7(_user$project$Game$Paddle, 0, y, 0, 0, 0, 0, 200);
+	return A7(_user$project$Game$Paddle, 0, y, 0, 0, 0, 0, 600);
 };
 var _user$project$Game$Model = F5(
 	function (a, b, c, d, e) {
