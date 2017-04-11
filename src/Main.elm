@@ -4,7 +4,7 @@ import Html exposing (..)
 import Game exposing (..)
 
 -- MAIN
-
+main : Program Never Model Msg
 main = 
   Html.program
     { init = Game.init

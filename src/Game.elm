@@ -6,7 +6,7 @@ import Element exposing (..)
 import Html exposing (..)
 import Time exposing (..)
 import Window exposing (Size)
-import Random
+import Random exposing (int, step, initialSeed)
 import Text
 import AnimationFrame
 import Task
@@ -152,14 +152,28 @@ moveBall delta ball player computer =
       , vx = handleVelocity ball.vx (ball.x < 7 - halfWidth) (ball.x > halfWidth - 7)
       }
 
+fst : ( a, b ) -> a
+fst (a, _) = a
+
+getInt : Float -> Int
+getInt t = round t
+
+initSeed : Int -> Random.Seed
+initSeed x = initialSeed x
+
+getRand : Int -> ( Int, Random.Seed )
+getRand x = step (int 3 35) (initSeed x)
+
 moveComputer : Time -> Int -> Paddle -> Ball -> Paddle
 moveComputer delta point computer ball =
   let
     movedComputer =
       handleCollisions delta { computer | vx = toFloat -1 * computer.speed}
+    rand =
+      fst (getRand (getInt (Time.inMilliseconds delta)))
   in
     { movedComputer |
-      x = clamp (22 - halfWidth) (halfWidth - 22) ball.x
+      x = clamp (22 - halfWidth) (halfWidth - 22) (ball.x + toFloat rand)
     , score = computer.score + point  
     }
 
@@ -182,6 +196,11 @@ within: Paddle -> Ball -> Bool
 within paddle ball =
   near paddle.y 8 ball.y && near paddle.x 20 ball.x
 
+
+handleCollisions :
+  number 
+  -> { a | vx : number, vy : number, x : number, y : number }
+  -> { a | vy : number, vx : number, x : number, y : number }
 handleCollisions delta obj =
   {obj |
     x = obj.x + obj.vx * delta
@@ -198,6 +217,7 @@ handleVelocity v leftBumper rightBumper =
   else
     v
 
+handleInput : Bool -> number -> Msg
 handleInput down keyCode =
   case (down, keyCode) of
     (True, 39) -> Player 1
@@ -234,6 +254,8 @@ view model =
     collage gameWidth gameHeight
       [ rect gameWidth gameHeight
           |> filled courtOrange
+      --, (rect gameWidth 5, black)
+      --    |> make { x = 0, y = 0 }
       , (oval 15 15, yellow)
           |> make ball
       , (rect 40 10, white)
@@ -246,9 +268,11 @@ view model =
           |> move (0, 10 - gameHeight/2)
       ]
 
+courtOrange : Color
 courtOrange =
   rgb 214 124 66
 
+formatTxt : (Text.Text -> Text.Text) -> String -> Element
 formatTxt f string =
   Text.fromString string
     |> Text.color white
@@ -256,8 +280,10 @@ formatTxt f string =
     |> f
     |> leftAligned
 
+msg : String
 msg = "SPACE to start and &larr;&rarr; to move"
 
+make : { a | x : Float, y : Float } -> ( Shape, Color ) -> Form
 make obj (shape, color) =
   shape
     |> filled color

@@ -36,9 +36,25 @@ var _user$project$Game$within = F2(
 	function (paddle, ball) {
 		return A3(_user$project$Game$near, paddle.y, 8, ball.y) && A3(_user$project$Game$near, paddle.x, 20, ball.x);
 	});
-var _user$project$Game$_p2 = {ctor: '_Tuple2', _0: 200, _1: 300};
-var _user$project$Game$halfWidth = _user$project$Game$_p2._0;
-var _user$project$Game$halfHeight = _user$project$Game$_p2._1;
+var _user$project$Game$initSeed = function (x) {
+	return _elm_lang$core$Random$initialSeed(x);
+};
+var _user$project$Game$getRand = function (x) {
+	return A2(
+		_elm_lang$core$Random$step,
+		A2(_elm_lang$core$Random$int, 3, 35),
+		_user$project$Game$initSeed(x));
+};
+var _user$project$Game$getInt = function (t) {
+	return _elm_lang$core$Basics$round(t);
+};
+var _user$project$Game$fst = function (_p2) {
+	var _p3 = _p2;
+	return _p3._0;
+};
+var _user$project$Game$_p4 = {ctor: '_Tuple2', _0: 200, _1: 300};
+var _user$project$Game$halfWidth = _user$project$Game$_p4._0;
+var _user$project$Game$halfHeight = _user$project$Game$_p4._1;
 var _user$project$Game$moveBall = F4(
 	function (delta, ball, player, computer) {
 		return (!A3(_user$project$Game$near, 0, _user$project$Game$halfHeight, ball.y)) ? _elm_lang$core$Native_Utils.update(
@@ -63,6 +79,10 @@ var _user$project$Game$moveBall = F4(
 	});
 var _user$project$Game$moveComputer = F4(
 	function (delta, point, computer, ball) {
+		var rand = _user$project$Game$fst(
+			_user$project$Game$getRand(
+				_user$project$Game$getInt(
+					_elm_lang$core$Time$inMilliseconds(delta))));
 		var movedComputer = A2(
 			_user$project$Game$handleCollisions,
 			delta,
@@ -74,7 +94,11 @@ var _user$project$Game$moveComputer = F4(
 		return _elm_lang$core$Native_Utils.update(
 			movedComputer,
 			{
-				x: A3(_elm_lang$core$Basics$clamp, 22 - _user$project$Game$halfWidth, _user$project$Game$halfWidth - 22, ball.x),
+				x: A3(
+					_elm_lang$core$Basics$clamp,
+					22 - _user$project$Game$halfWidth,
+					_user$project$Game$halfWidth - 22,
+					ball.x + _elm_lang$core$Basics$toFloat(rand)),
 				score: computer.score + point
 			});
 	});
@@ -95,9 +119,9 @@ var _user$project$Game$movePaddle = F3(
 				score: player.score + point
 			});
 	});
-var _user$project$Game$_p3 = {ctor: '_Tuple2', _0: 400, _1: 600};
-var _user$project$Game$gameWidth = _user$project$Game$_p3._0;
-var _user$project$Game$gameHeight = _user$project$Game$_p3._1;
+var _user$project$Game$_p5 = {ctor: '_Tuple2', _0: 400, _1: 600};
+var _user$project$Game$gameWidth = _user$project$Game$_p5._0;
+var _user$project$Game$gameHeight = _user$project$Game$_p5._1;
 var _user$project$Game$Ball = F4(
 	function (a, b, c, d) {
 		return {x: a, y: b, vx: c, vy: d};
@@ -124,38 +148,38 @@ var _user$project$Game$defaultModel = {
 var _user$project$Game$Play = {ctor: 'Play'};
 var _user$project$Game$update = F2(
 	function (msg, model) {
-		var _p4 = msg;
-		switch (_p4.ctor) {
+		var _p6 = msg;
+		switch (_p6.ctor) {
 			case 'NoOp':
 				return model;
 			case 'Resize':
 				return _elm_lang$core$Native_Utils.update(
 					model,
-					{size: _p4._0});
+					{size: _p6._0});
 			case 'Player':
-				var _p5 = model;
-				var player = _p5.player;
+				var _p7 = model;
+				var player = _p7.player;
 				return _elm_lang$core$Native_Utils.update(
 					model,
 					{
 						player: _elm_lang$core$Native_Utils.update(
 							player,
-							{direction: _p4._0})
+							{direction: _p6._0})
 					});
 			case 'Computer':
-				var _p6 = model;
-				var computer = _p6.computer;
+				var _p8 = model;
+				var computer = _p8.computer;
 				return _elm_lang$core$Native_Utils.update(
 					model,
 					{
 						computer: _elm_lang$core$Native_Utils.update(
 							computer,
-							{direction: _p4._0})
+							{direction: _p6._0})
 					});
 			case 'StopStart':
 				var newState = function () {
-					var _p7 = model.state;
-					if (_p7.ctor === 'Play') {
+					var _p9 = model.state;
+					if (_p9.ctor === 'Play') {
 						return _user$project$Game$Pause;
 					} else {
 						return _user$project$Game$Play;
@@ -165,35 +189,35 @@ var _user$project$Game$update = F2(
 					model,
 					{state: newState});
 			default:
-				var _p9 = _p4._0;
-				var _p8 = model;
-				var state = _p8.state;
-				var player = _p8.player;
-				var computer = _p8.computer;
-				var ball = _p8.ball;
+				var _p11 = _p6._0;
+				var _p10 = model;
+				var state = _p10.state;
+				var player = _p10.player;
+				var computer = _p10.computer;
+				var ball = _p10.ball;
 				var playerPoint = (_elm_lang$core$Native_Utils.cmp(ball.y, _user$project$Game$halfHeight) > 0) ? 1 : 0;
 				var computerPoint = (_elm_lang$core$Native_Utils.cmp(ball.y, 0 - _user$project$Game$halfHeight) < 0) ? 1 : 0;
 				var newState = (!_elm_lang$core$Native_Utils.eq(playerPoint, computerPoint)) ? _user$project$Game$Pause : state;
-				var newBall = _elm_lang$core$Native_Utils.eq(state, _user$project$Game$Pause) ? ball : A4(_user$project$Game$moveBall, _p9, ball, player, computer);
+				var newBall = _elm_lang$core$Native_Utils.eq(state, _user$project$Game$Pause) ? ball : A4(_user$project$Game$moveBall, _p11, ball, player, computer);
 				return _elm_lang$core$Native_Utils.update(
 					model,
 					{
 						state: newState,
 						ball: newBall,
-						player: A3(_user$project$Game$movePaddle, _p9, playerPoint, player),
-						computer: A4(_user$project$Game$moveComputer, _p9, computerPoint, computer, newBall)
+						player: A3(_user$project$Game$movePaddle, _p11, playerPoint, player),
+						computer: A4(_user$project$Game$moveComputer, _p11, computerPoint, computer, newBall)
 					});
 		}
 	});
 var _user$project$Game$view = function (model) {
-	var _p10 = model.size;
-	var width = _p10.width;
-	var height = _p10.height;
-	var _p11 = model;
-	var state = _p11.state;
-	var ball = _p11.ball;
-	var player = _p11.player;
-	var computer = _p11.computer;
+	var _p12 = model.size;
+	var width = _p12.width;
+	var height = _p12.height;
+	var _p13 = model;
+	var state = _p13.state;
+	var ball = _p13.ball;
+	var player = _p13.player;
+	var computer = _p13.computer;
 	var scores = A2(
 		_user$project$Game$formatTxt,
 		_evancz$elm_graphics$Text$height(50),
@@ -284,21 +308,21 @@ var _user$project$Game$Player = function (a) {
 };
 var _user$project$Game$handleInput = F2(
 	function (down, keyCode) {
-		var _p12 = {ctor: '_Tuple2', _0: down, _1: keyCode};
-		_v3_5:
+		var _p14 = {ctor: '_Tuple2', _0: down, _1: keyCode};
+		_v4_5:
 		do {
-			if (_p12.ctor === '_Tuple2') {
-				if (_p12._0 === true) {
-					switch (_p12._1) {
+			if (_p14.ctor === '_Tuple2') {
+				if (_p14._0 === true) {
+					switch (_p14._1) {
 						case 39:
 							return _user$project$Game$Player(1);
 						case 37:
 							return _user$project$Game$Player(-1);
 						default:
-							break _v3_5;
+							break _v4_5;
 					}
 				} else {
-					switch (_p12._1) {
+					switch (_p14._1) {
 						case 39:
 							return _user$project$Game$Player(0);
 						case 37:
@@ -306,11 +330,11 @@ var _user$project$Game$handleInput = F2(
 						case 32:
 							return _user$project$Game$StopStart;
 						default:
-							break _v3_5;
+							break _v4_5;
 					}
 				}
 			} else {
-				break _v3_5;
+				break _v4_5;
 			}
 		} while(false);
 		return _user$project$Game$NoOp;
@@ -339,9 +363,9 @@ var _user$project$Game$subscriptions = function (model) {
 					_1: {
 						ctor: '::',
 						_0: _elm_lang$animation_frame$AnimationFrame$diffs(
-							function (_p13) {
+							function (_p15) {
 								return _user$project$Game$Frames(
-									_elm_lang$core$Time$inSeconds(_p13));
+									_elm_lang$core$Time$inSeconds(_p15));
 							}),
 						_1: {ctor: '[]'}
 					}
